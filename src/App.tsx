@@ -48,9 +48,9 @@ const Providers: React.FC = ({ children }) => {
     <ThemeProvider theme={lightTheme}>
     <GlobalStyle/>
       <UseWalletProvider
-        chainId={56}
+        chainId={97}
         connectors={{
-          walletconnect: { rpcUrl: 'https://bsc-dataseed.binance.org/' },
+          walletconnect: { rpcUrl: 'https://data-seed-prebsc-1-s1.binance.org:8545/' },
         }}
       >
         <PresaleProvider>

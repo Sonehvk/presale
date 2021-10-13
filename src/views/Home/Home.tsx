@@ -9,7 +9,7 @@ import * as bsc from '@binance-chain/bsc-use-wallet'
 import { useWallet } from 'use-wallet'
 import BigNumber from 'bignumber.js'
 import usePresale from '../../hooks/usePresale'
-import { deposit } from '../../presale/utils'
+import { deposit , withdrawal, getBalancePresaleForAddress} from '../../presale/utils'
 import { useMediaQuery } from 'react-responsive'
 import Value from '../../components/Value'
 import Countdown from 'react-countdown'
@@ -35,7 +35,7 @@ const Home: React.FC = () => {
   const getBnbPrice = async () => {
     let ticker = await binance.prices({ symbol: 'BNBUSDT' })
     let price = Number(ticker['BNBUSDT'])
-    setNum(price/27.5)
+    setNum(price/99999.5)
   }
   getBnbPrice()
 
@@ -49,14 +49,16 @@ const Home: React.FC = () => {
 
   const [leftTime, setCountTime] = useState(0)
 
-  const web3 = new Web3(new Web3.providers.HttpProvider("https://bsc-dataseed.binance.org"));
-  const presaleContract = new web3.eth.Contract((ERC20ABI as unknown) as AbiItem, '0xbDB2c7b6960C29A016212F76AA10F92c89b7CAE1');
+  const [tokenBalance, setTokenBalance]  = useState(0)
 
+  const web3 = new Web3(new Web3.providers.HttpProvider("https://data-seed-prebsc-1-s1.binance.org:8545/"));
+  const presaleContract = new web3.eth.Contract((ERC20ABI as unknown) as AbiItem, '0x87ceF4FBc6fD3f6476f7f017f0Bf3bD96d4d218E');
+  
   const getLeftTime = async () => {
     const leftTimeNum = await presaleContract.methods.getLeftTimeAmount().call();
     setCountTime(new BigNumber(leftTimeNum).toNumber() * 1000)
   } 
-  getLeftTime()
+  
   
   const [depositInput, setDepositNum] = useState(0)
 
@@ -71,6 +73,26 @@ const Home: React.FC = () => {
     deposit(presale, account, depositInput)
   };
 
+  const withdrawalEther = async () => {
+    withdrawal(presale,account)
+  }
+
+
+  const balanceArtn = async () => {
+    var balance =  await getBalancePresaleForAddress(presale,account)
+    balance = balance / 10000000000000
+    setTokenBalance(balance)
+    return balance
+  }
+
+  if(account){
+    getLeftTime()
+    balanceArtn()
+  }
+  
+  
+  
+
   return (
     <div>
         <Page>        
@@ -83,6 +105,7 @@ const Home: React.FC = () => {
               subtitle={wallet.account}
             />
           </div>
+       
           <div style={{display: isDesktopOrLaptop?'flex':'block', width: isDesktopOrLaptop?1072:'auto', margin: isDesktopOrLaptop?"40px auto auto auto":"40px auto"}}>
             <StyledContainer>
               <div style={{width:isDesktopOrLaptop?"456px":'auto',}}>
@@ -90,7 +113,11 @@ const Home: React.FC = () => {
               </div>
               <div style={{marginTop:'36px', padding:'12px 0', display:'grid', borderBottom:'1px solid rgba(0, 0, 0, 0.3)', }}>
                 <span>Fixed Swap Ratio</span>
-                <span className='boldFont'>1 BNB = 27.5 PIANO</span>
+                <span className='boldFont'>1 BNB = 99999.5 ARTN</span>
+              </div>
+              <div style={{marginTop:'36px', padding:'12px 0', display:'grid', borderBottom:'1px solid rgba(0, 0, 0, 0.3)', }}>
+                <span>ARTN BALANCE</span>
+                <span className='boldFont'>{tokenBalance} ARTN</span>
               </div>
               <div style={{display:'flex'}}>
                 <div className='priceState' style={{width:isDesktopOrLaptop?200:"50%"}}>
@@ -139,6 +166,10 @@ const Home: React.FC = () => {
               <div style={{marginTop:'50px'}}>
                 <Button disabled ={!account} text="Deposit" onClick={depositEther} variant="secondary" />
               </div>
+              <div style={{marginTop:'50px'}}>
+                <Button disabled ={!account} text="Withdrawal" onClick={withdrawalEther} variant="secondary" />
+              </div>
+              
             </StyledContainerR>
           </div>
       </Page>

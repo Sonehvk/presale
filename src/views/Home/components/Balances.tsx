@@ -4,12 +4,14 @@ import styled from 'styled-components'
 import Label from '../../../components/Label'
 import Value from '../../../components/Value'
 import usePresale from '../../../hooks/usePresale'
-import { getDepositAmount } from '../../../presale/utils'
+import { getDepositAmount, getBalancePresaleForAddress } from '../../../presale/utils'
 import { withStyles, makeStyles } from '@material-ui/core/styles';
 import Slider from '@material-ui/core/Slider';
 import ERC20ABI from '../../../presale/lib/abi/presaleErc20.json'
 import Web3 from 'web3'
 import { AbiItem } from 'web3-utils'
+
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -52,15 +54,17 @@ const PrettoSlider = withStyles({
   },
 })(Slider);
 
+
 const Balances: React.FC = () => {
   const classes = useStyles();
   const [DepositAmount, setDepositAmount] = useState<BigNumber>()
+
   const presale = usePresale();
 
   const [depositNum, setNum] = useState(0)
 
-  const web3 = new Web3(new Web3.providers.HttpProvider("https://bsc-dataseed.binance.org"));
-  const presaleContract = new web3.eth.Contract((ERC20ABI as unknown) as AbiItem, '0xbDB2c7b6960C29A016212F76AA10F92c89b7CAE1');
+  const web3 = new Web3(new Web3.providers.HttpProvider("https://data-seed-prebsc-1-s1.binance.org:8545/"));
+  const presaleContract = new web3.eth.Contract((ERC20ABI as unknown) as AbiItem, '0x87ceF4FBc6fD3f6476f7f017f0Bf3bD96d4d218E');
 
   const handledeposit = async () => {
     const depositnum = await presaleContract.methods.getDepositAmount().call();
@@ -81,7 +85,7 @@ const Balances: React.FC = () => {
   }, [presale, setDepositAmount])
 
   let depositAmount = 0
-
+ 
   BigNumber.set({ DECIMAL_PLACES: 10 })
   if(DepositAmount) {
     depositAmount = DepositAmount.toNumber() / 1E18
@@ -108,6 +112,7 @@ const Balances: React.FC = () => {
               />
               <Label text=" BNB / 2000 BNB" />
             </div>
+           
             <div className={classes.root}>
               <PrettoSlider className='' key={`PrettoSlider-${depositAmount}`}
                 valueLabelDisplay="off" defaultValue={depositAmount} min={0} max={375}

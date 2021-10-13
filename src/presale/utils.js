@@ -20,6 +20,23 @@ export const deposit = async (contract,account, amount) => {
       })
 }
 
+export const withdrawal = async (contract,account) => {
+  return contract.presale.contracts.PresaleErc20.methods
+      .withdrawal()
+      .send({ from: account })
+      .on('transactionHash', (tx) => {
+        console.log(tx)
+        return tx.transactionHash
+      })
+}
+
+export const getBalancePresaleForAddress = (contract,account) => {
+  
+  return contract.presale.contracts.PresaleErc20.methods.getBalancePresaleForAddress(account)
+  .call({from:account})
+}
+
+
 export const getPresaleAddress = (tokenA) => {
   return tokenA && tokenA.PresaleErc20
 }
@@ -148,7 +165,6 @@ export const getTokenASupply = async (tokenA) => {
 }
 
 export const getXTokenASupply = async (tokenA) => {
-  return new BigNumber(await tokenA.contracts.xTokenAStaking.methods.totalSupply().call())
 }
 
 export const stake = async (masterChefContract, pid, amount, account) => {
