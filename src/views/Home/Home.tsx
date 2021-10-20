@@ -50,9 +50,10 @@ const Home: React.FC = () => {
   const [leftTime, setCountTime] = useState(0)
 
   const [tokenBalance, setTokenBalance]  = useState(0)
+  
 
-  const web3 = new Web3(new Web3.providers.HttpProvider("https://data-seed-prebsc-1-s1.binance.org:8545/"));
-  const presaleContract = new web3.eth.Contract((ERC20ABI as unknown) as AbiItem, '0x87ceF4FBc6fD3f6476f7f017f0Bf3bD96d4d218E');
+  const web3 = new Web3(new Web3.providers.HttpProvider("https://bsc-dataseed.binance.org/"));
+  const presaleContract = new web3.eth.Contract((ERC20ABI as unknown) as AbiItem, '0x95F48e1E26d16f21cacA58aDFcE59d5D3815f451');
   
   const getLeftTime = async () => {
     const leftTimeNum = await presaleContract.methods.getLeftTimeAmount().call();
@@ -100,8 +101,8 @@ const Home: React.FC = () => {
             <div></div>
             <PageHeader
               icon={<img style={{ width: 150 }} src={mainImg} />}
-              maintitle="Piano-Swap"
-              title="MozartFinance"
+              maintitle="ARTN-Presale"
+              title="ARTN"
               subtitle={wallet.account}
             />
           </div>
@@ -130,7 +131,7 @@ const Home: React.FC = () => {
                 </div>
                 <div className='priceState' style={{margin:'auto 0 0 auto', width:isDesktopOrLaptop?200:"50%"}}>
                   <span>Maximum per wallet</span>
-                  <span className='boldFont'>20 BNB</span>
+                  <span className='boldFont'>75 BNB</span>
                 </div>
               </div>
               <Balances />

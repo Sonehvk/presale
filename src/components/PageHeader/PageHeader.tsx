@@ -10,11 +10,11 @@ interface PageHeaderProps {
   title?: string
 }
 
-const PageHeader: React.FC<PageHeaderProps> = ({ icon, maintitle, subtitle, title }) => {
+const PageHeader: React.FC<PageHeaderProps> = ({ /* icon, */ maintitle, subtitle, title }) => {
   return (
     <Container size="sm">
       <StyledPageHeader>
-        <StyledIcon>{icon}</StyledIcon>
+        {/* <StyledIcon>{icon}</StyledIcon> */}
         <StyledMainTitle>{maintitle}</StyledMainTitle>
         <StyledTitle>{title}</StyledTitle>
         <StyledSubtitle>{subtitle}</StyledSubtitle>
